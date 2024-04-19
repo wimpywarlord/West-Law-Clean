@@ -81,7 +81,9 @@ def read_docx_table(file_path, state_name):
             for cell in row.cells:
                 row_data.append(cell.text)
 
+            # print("**************************************")
             print(row_data) # DEBUG
+            # print("**************************************")
 
             if row_data[0] == "Document Information:": # ['Document Information:', 'Supreme Court of Alabama. January 11, 1910 164 Ala. 111 51 So. 424\nExtracted from page: 1\n']
                 tempRowOfCSV = []
@@ -89,7 +91,7 @@ def read_docx_table(file_path, state_name):
                 if row_data[1]:
                     tempRowOfCSV.append(row_data[1])
 
-            if row_data[0] == "WestCheck Information:": # ['WestCheck Information:', 'Birmingham Ry., Light & Power Co. v. Moseley, 164 Ala. 111, 51 So. 424 (Ala. Jan. 11, 1910)\n']
+            elif row_data[0] == "WestCheck Information:": # ['WestCheck Information:', 'Birmingham Ry., Light & Power Co. v. Moseley, 164 Ala. 111, 51 So. 424 (Ala. Jan. 11, 1910)\n']
                 # WestCheck Information
                 if row_data[1]:
                     tempRowOfCSV.append(row_data[1])
@@ -104,7 +106,7 @@ def read_docx_table(file_path, state_name):
                     if matches:
                         if matches:
                             # ! INFO: We can use -1 index since, date is always at the last
-                            print(' '.join(matches[-1].split()[1:]))
+                            # print(' '.join(matches[-1].split()[1:]))
                             if is_year_only_date(' '.join(matches[-1].split()[1:])):
                                 # Place holder date decide for case with year only date.
                                 placeHolderDate = "June 15, " +  ' '.join(matches[-1].split()[1:])
@@ -119,8 +121,8 @@ def read_docx_table(file_path, state_name):
 
             # ['Treatment', 'Title', 'Date', 'Type', 'Depth', 'Headnote(s)']
             # Treatment - ANY
-            if row_data[0]: # ['Criticized in', ' 1.  Bradley v. Deaton  \n94 So. 767 , 208 Ala. 582 , Ala. , (NO. 6 DIV. 460 )\n', 'Dec. 14, 1922', 'Case', '', 'So.\n']
-                # print("@@@@@@@@@@@@@@@@") # DEBUG
+            # ! This Length assumption is huge Gamble - Treatment Table is of length 6
+            elif len(row_data) == 6 and row_data != ['Treatment', 'Title', 'Date', 'Type', 'Depth', 'Headnote(s)']: # ['Criticized in', ' 1.  Bradley v. Deaton  \n94 So. 767 , 208 Ala. 582 , Ala. , (NO. 6 DIV. 460 )\n', 'Dec. 14, 1922', 'Case', '', 'So.\n']
                 localCopyOfTempRowOfCSV = tempRowOfCSV[:]
 
                 localCopyOfTempRowOfCSV.append(row_data[0])
@@ -135,6 +137,9 @@ def read_docx_table(file_path, state_name):
                     else:
                         localCopyOfTempRowOfCSV.append(row_data[2])
                 
+                # print("$$$$$$$$$$$$$$$$$$$$$$$$$")
+                # print(localCopyOfTempRowOfCSV)
+
                 finalCSV.append(localCopyOfTempRowOfCSV[:])
 
 
@@ -142,7 +147,7 @@ def read_docx_table(file_path, state_name):
 
 for state in stateFolderNames:
     # Define the folder containing the DOCX files for a perticular State
-    folder_path = f"/Users/kdhyani/desktop/west-law/files/{state}/Process" #'/Users/kdhyani/desktop/west-law/files/<STATE>/Process'
+    folder_path = f"/Users/kdhyani/desktop/West-Law-Clean/files/{state}/Process" #'/Users/kdhyani/desktop/West-Law-Clean/files/<STATE>/Process'
 
     # print(os.listdir(folder_path)) #DEBUG
 
@@ -156,7 +161,7 @@ for state in stateFolderNames:
             docx_file_path = os.path.join(folder_path, file_name)
             read_docx_table(docx_file_path, state)
 
-    final_output_file_name = "./output/" + state + ".csv"
+    final_output_file_name = "./outputAll/" + state + ".csv"
 
     with open(final_output_file_name, 'w') as f:
         

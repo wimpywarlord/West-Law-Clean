@@ -178,7 +178,7 @@ def read_docx_table(file_path, state_name):
 
 for state in stateFolderNames:
     # Define the folder containing the DOCX files for a perticular State
-    folder_path = f"/Users/kdhyani/desktop/west-law/files/{state}/Process" #'/Users/kdhyani/desktop/west-law/files/<STATE>/Process'
+    folder_path = f"/Users/kdhyani/desktop/West-Law-Clean/files/{state}/Process" #'/Users/kdhyani/desktop/West-Law-Clean/files/<STATE>/Process'
 
     # print(os.listdir(folder_path)) #DEBUG
 
